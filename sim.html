@@ -2,79 +2,88 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>NuEdit | CRISPR Visualizer</title>
+    <title>NuEdit Nano-Simulation</title>
     <style>
-        body { background: #010409; color: #e6edf3; font-family: 'Courier New', monospace; padding: 40px; overflow-x: hidden; }
-        .header { border-bottom: 2px solid #00f2ff; padding-bottom: 20px; margin-bottom: 40px; }
-        .dna-track { background: #0d1117; padding: 60px 20px; border-radius: 15px; position: relative; min-height: 100px; display: flex; align-items: center; justify-content: center; }
+        body { background: #010409; color: #00f2ff; font-family: 'Courier New', monospace; padding: 50px; overflow: hidden; }
+        .monitor { border: 2px solid #1a2a3a; padding: 30px; position: relative; background: #000; box-shadow: 0 0 50px rgba(0, 242, 255, 0.1); }
+        .dna-vessel { height: 200px; display: flex; align-items: center; justify-content: center; position: relative; margin: 50px 0; border: 1px solid #30363d; }
         
-        .strand { font-size: 2.5rem; letter-spacing: 12px; white-space: nowrap; transition: 1s; }
-        .mutation { color: #f85149; text-decoration: underline; font-weight: bold; }
+        .strand { font-size: 3rem; letter-spacing: 15px; font-weight: bold; transition: all 1s; z-index: 1; }
+        .mutation { color: #f85149; text-shadow: 0 0 10px #f85149; }
         
-        /* 유전자 가위(Cas9) 애니메이션 */
-        .cas9 { position: absolute; font-size: 4rem; top: -20px; left: -100px; transition: all 2.5s cubic-bezier(0.45, 0.05, 0.55, 0.95); opacity: 0; filter: drop-shadow(0 0 10px #00f2ff); }
+        /* Cas9 로봇 팔 애니메이션 */
+        .cas9-unit { 
+            position: absolute; font-size: 5rem; top: -50px; left: -100px; 
+            transition: all 3s ease-in-out; opacity: 0; z-index: 10;
+        }
         
-        .log-panel { margin-top: 50px; background: #161b22; padding: 25px; border-radius: 10px; border-left: 10px solid #00f2ff; }
-        .status-dot { height: 10px; width: 10px; background-color: #00f2ff; border-radius: 50%; display: inline-block; margin-right: 10px; animation: blink 1s infinite; }
-        
-        @keyframes blink { 0% { opacity: 0; } 50% { opacity: 1; } 100% { opacity: 0; } }
-        .success { color: #3fb950; font-weight: bold; }
+        .status-panel { background: #0d1117; padding: 20px; border-top: 1px solid #00f2ff; height: 150px; overflow-y: auto; }
+        .success-flash { animation: flash 0.5s infinite; }
+        @keyframes flash { 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2 style="margin:0; color:#00f2ff;">PROPRIETARY SIMULATION: GENE EDITING PROCESS</h2>
-        <small>NuEdit Lab Systems | TP53 Precision Protocol</small>
-    </div>
-
-    <div class="dna-track" id="track">
-        <div id="cas9" class="cas9">✂️</div>
-        <div id="dnaStrand" class="strand"></div>
-    </div>
-
-    <div class="log-panel">
-        <div id="statusLog">
-            <p><span class="status-dot"></span>데이터 스트림 수신 중...</p>
+    <div class="monitor">
+        <h2>CORE SIMULATION: TARGETING TP53 MUTATION</h2>
+        <div class="dna-vessel">
+            <div id="cas9" class="cas9-unit">✂️</div>
+            <div id="dnaDisplay" class="strand"></div>
+        </div>
+        <div id="log" class="status-panel">
+            > SYSTEM READY. WAITING FOR DNA STREAM...
         </div>
     </div>
 
     <script>
         const input = localStorage.getItem('targetDNA');
-        const strand = document.getElementById('dnaStrand');
+        const display = document.getElementById('dnaDisplay');
+        const log = document.getElementById('log');
         const cas9 = document.getElementById('cas9');
-        const log = document.getElementById('statusLog');
+
+        function addLog(msg) {
+            log.innerHTML += `<br>> ${msg}`;
+            log.scrollTop = log.scrollHeight;
+        }
 
         if(input) {
             let mutation = input.includes("CAC") ? "CAC" : (input.includes("TTT") ? "TTT" : null);
-            strand.innerHTML = mutation ? input.replace(mutation, `<span class="mutation">${mutation}</span>`) : input;
+            display.innerHTML = mutation ? input.replace(mutation, `<span class="mutation">${mutation}</span>`) : input;
 
-            // 시뮬레이션 시퀀스
             setTimeout(() => {
-                log.innerHTML += "<p>[OK] 가이드 RNA(gRNA) 설계 및 최적화 완료.</p>";
+                addLog("DNA 서열 로드 완료. 암 변이 검색 중...");
             }, 1000);
 
             setTimeout(() => {
-                log.innerHTML += "<p>[PROCESS] Cas9 복합체 투입... 타겟 위치 스캔 중.</p>";
-                cas9.style.opacity = "1";
-                const pos = input.indexOf(mutation);
-                if(pos !== -1) {
-                    cas9.style.left = `calc(50% - ${(input.length/2 * 30)}px + ${(pos * 35)}px)`;
+                if(mutation) {
+                    addLog(`CRITICAL: 변이 '${mutation}' 감지됨. CRISPR-Cas9 유닛 기동.`);
+                    cas9.style.opacity = "1";
+                    // 변이 위치로 가위 이동 (중앙 정렬 기준)
+                    const pos = input.indexOf(mutation);
+                    const offset = (pos - input.length/2) * 45;
+                    cas9.style.transform = `translateX(calc(50vw + ${offset}px)) translateY(80px)`;
                 } else {
-                    cas9.style.left = "50%";
+                    addLog("변이 미발견. 정상 세포로 판단하여 가동 중지.");
                 }
-            }, 2500);
+            }, 3000);
 
             setTimeout(() => {
                 if(mutation) {
-                    log.innerHTML += "<p class='success'>[SUCCESS] 변이 지점 절단 및 정상 염기 교정 완료(HDR).</p>";
-                    strand.style.color = "#3fb950";
-                    strand.innerHTML = input.replace(mutation, "CGC"); // 예시: 정상으로 교정된 모습
-                } else {
-                    log.innerHTML += "<p>[FAIL] 타겟 지점 불일치. 오프타겟 위험으로 작동 중단.</p>";
+                    addLog("<span style='color:white;'>[ACTION] 유전자 절단(Cleavage) 진행...</span>");
+                    display.style.letterSpacing = "30px"; // 절단 효과
+                    display.style.opacity = "0.5";
                 }
-            }, 5500);
+            }, 6000);
+
+            setTimeout(() => {
+                if(mutation) {
+                    addLog("<span class='success-flash' style='color:#3fb950;'>[COMPLETE] 정상 염기로 교정되었습니다. (HDR Success)</span>");
+                    display.innerHTML = input.replace(mutation, "<span style='color:#3fb950;'>CGC</span>");
+                    display.style.letterSpacing = "15px";
+                    display.style.opacity = "1";
+                    display.style.color = "#3fb950";
+                }
+            }, 8500);
         }
     </script>
 </body>
 </html>
-
