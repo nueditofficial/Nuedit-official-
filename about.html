@@ -6,7 +6,7 @@
     <style>
         function runAnalysis() {
     const rawInput = document.getElementById('seqInput').value;
-    // 공백, 줄바꿈 제거하고 대문자로 변환
+    // 모든 공백 제거 및 대문자 변환
     const input = rawInput.toUpperCase().replace(/[^ATGC]/g, '');
     const resultDiv = document.getElementById('analysisResult');
     const report = document.getElementById('report');
@@ -18,34 +18,30 @@
 
     let findings = [];
 
-    // --- TP53 175번 변이 정밀 분석 ---
-    // 정상: CGC / 암: CAC
-    if (input.includes("TCACCACCAG") || (input.includes("CAC") && input.length < 50)) {
-        findings.push(`<p class="alert">🚨 [위험] TP53 175번 변이(Arg175His) 감지: 암 유발 가능성이 매우 높습니다.</p>`);
-    } else if (input.includes("TCACCGCCAG") || input.includes("CGC")) {
-        findings.push(`<p class="safe">✅ [정상] TP53 175번 구간: 정상 서열 확인</p>`);
+    // 1. 175번 위치 분석 (정상: CGC / 암: CAC)
+    if (input.includes("CACCAG") || input.includes("TCACCAC")) {
+        findings.push(`<p class="alert">🚨 [위험] TP53 175번 암 변이(Arg175His) 감지됨</p>`);
+    } else if (input.includes("CGCCAG") || input.includes("TCACCGCC")) {
+        findings.push(`<p class="safe">✅ [정상] TP53 175번 구간: 정상(Wild-type)</p>`);
     }
 
-    // --- TP53 248번 변이 정밀 분석 ---
-    // 정상: TTC / 암: TTT (또는 다른 변이)
-    if (input.includes("TATTTCACCCT") || (input.includes("TTC") && !findings.length)) {
-         findings.push(`<p class="safe">✅ [정상] TP53 248번 구간: 정상 서열 확인</p>`);
-    } else if (input.includes("TATTTTACCCT") || input.includes("TTT")) {
-         findings.push(`<p class="alert">🚨 [주의] TP53 248번 구간에서 변이 의심 서열(TTT)이 발견되었습니다.</p>`);
+    // 2. 248번 위치 분석 (정상: TTC / 암: TTT)
+    if (input.includes("TATTTTACC") || input.includes("TTTACC")) {
+        findings.push(`<p class="alert">🚨 [주의] TP53 248번 구간 변이 의심(TTT)</p>`);
+    } else if (input.includes("TATTTCACC") || input.includes("TTCACC")) {
+        findings.push(`<p class="safe">✅ [정상] TP53 248번 구간: 정상(Wild-type)</p>`);
     }
 
-    // --- 결과 출력 ---
+    // 결과 출력
     if (findings.length === 0) {
-        resultDiv.innerHTML = `
-            <p style="color:#8b949e;">⚠️ 일치하는 TP53 핵심 마커를 찾지 못했습니다.</p>
-            <p style="font-size:0.8rem;">입력된 서열: ${input.substring(0, 20)}...</p>
-        `;
+        resultDiv.innerHTML = `<p style="color:#8b949e;">⚠️ 해당 서열 구간에서 알려진 TP53 핵심 변이를 찾지 못했습니다.</p>`;
     } else {
         resultDiv.innerHTML = findings.join('');
     }
     
     report.style.display = 'block';
 }
+
 
     </style>
 </head>
