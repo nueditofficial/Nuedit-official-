@@ -3,52 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NuEdit | Nu Code, New Life</title>
+    <title>NuEdit | 새로운 코드, 새로운 생명</title>
     <style>
-        body { background-color: #0a0e17; color: #ffffff; font-family: sans-serif; text-align: center; padding: 80px 20px; margin: 0; }
-        .logo { width: 180px; margin-bottom: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(0, 242, 255, 0.1); }
-        
-        /* 기존 소개 멘트 강조 */
-        h1 { color: #00f2ff; font-size: 3rem; letter-spacing: -1px; margin-bottom: 10px; font-weight: 800; }
-        .vision { color: #aeb9cc; font-size: 1.2rem; margin-bottom: 30px; font-weight: 300; }
-        
-        .badge-container { margin-bottom: 40px; }
-        .badge { display: inline-block; padding: 6px 18px; border: 1px solid #00f2ff; border-radius: 20px; color: #00f2ff; font-size: 0.85rem; margin: 5px; background: rgba(0, 242, 255, 0.05); }
-        
-        /* 분석 엔진 연결 버튼 */
-        .btn { 
-            display: inline-block; 
-            margin-top: 20px; 
-            text-decoration: none; 
-            color: #0a0e17; 
-            background: #00f2ff; 
-            padding: 16px 40px; 
-            border-radius: 8px; 
-            font-weight: bold; 
-            transition: 0.3s; 
-            box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3);
+        /* 브랜드 컬러 정의 */
+        :root {
+            --midnight-blue: #0a192f;
+            --electric-cyan: #00f2ff;
+            --text-silver: #ccd6f6;
+            --gray-blue: #233554;
         }
-        .btn:hover { background: #ffffff; transform: translateY(-2px); }
-        
-        .footer { margin-top: 120px; font-size: 0.8rem; color: #475569; letter-spacing: 1px; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Pretendard', -apple-system, sans-serif; 
+            background-color: var(--midnight-blue); 
+            color: var(--text-silver);
+            line-height: 1.7;
+        }
+
+        /* 헤더/로고 */
+        header { padding: 30px 10%; display: flex; justify-content: space-between; align-items: center; }
+        .logo { 
+            font-size: 28px; font-weight: 800; color: var(--electric-cyan);
+            letter-spacing: -1px;
+        }
+        .logo span { color: #fff; }
+
+        /* 히어로 섹션 */
+        .hero { 
+            padding: 100px 10%; text-align: center;
+            background: radial-gradient(circle at center, #112240 0%, #0a192f 100%);
+        }
+        .hero h1 { 
+            font-size: 3.5rem; color: #fff; margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+        .hero p { font-size: 1.2rem; max-width: 700px; margin: 0 auto 40px; }
+        .highlight { color: var(--electric-cyan); font-weight: bold; }
+
+        /* 로드맵 섹션 (카드형) */
+        .roadmap-container { 
+            padding: 80px 10%; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .roadmap-card {
+            background: var(--gray-blue);
+            padding: 40px; border-radius: 15px;
+            transition: transform 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+        .roadmap-card:hover { 
+            transform: translateY(-10px); 
+            border-bottom: 4px solid var(--electric-cyan);
+        }
+        .roadmap-card h3 { color: var(--electric-cyan); margin-bottom: 15px; font-size: 1.5rem; }
+        .roadmap-card .step { font-size: 0.9rem; color: #8892b0; margin-bottom: 10px; display: block; }
+
+        /* 회사 취지 설명 */
+        .mission { padding: 80px 10%; background-color: #0f172a; text-align: center; }
+        .mission h2 { font-size: 2.5rem; color: #fff; margin-bottom: 30px; }
+        .mission-text { max-width: 900px; margin: 0 auto; font-size: 1.1rem; color: #a8b2d1; }
+
+        footer { text-align: center; padding: 60px; font-size: 0.9rem; color: #495670; }
     </style>
 </head>
 <body>
-    <img src="logo.png" alt="NuEdit Logo" class="logo" onerror="this.style.display='none'">
-    
-    <h1>Nu Code, New Life.</h1>
-    <p class="vision">암과 노화를 정복하는 정밀 유전자 편집 플랫폼</p>
-    
-    <div class="badge-container">
-        <span class="badge">Python Driven</span>
-        <span class="badge">CRISPR Tech</span>
-        <span class="badge">Longevity Science</span>
+
+    <header>
+        <div class="logo">Nu<span>Edit</span></div>
+    </header>
+
+    <section class="hero">
+        <div style="font-size: 80px; margin-bottom: 20px;">🧬</div>
+        <h1>Nu Code, New Life</h1>
+        <p>유전자의 기본 단위인 <span class="highlight">Nucleotide</span>를 AI로 분석하고,<br>
+        가장 정밀하게 <span class="highlight">Edit</span>하여 인류의 건강한 미래를 다시 써 내려갑니다.</p>
+    </section>
+
+    <section class="mission">
+        <h2>Our Mission</h2>
+        <p class="mission-text">
+            NuEdit은 암을 도려내고 노화를 되돌리는 혁신을 지향합니다. 
+            단순한 편집을 넘어, 파이썬 기반의 초정밀 분석 엔진을 통해 
+            병든 유전자를 정확히 찾아내고 치유하는 '유전자 가위'의 새로운 기준을 제시합니다.
+        </p>
+    </section>
+
+    <div class="roadmap-container">
+        <div class="roadmap-card">
+            <span class="step">Phase 01</span>
+            <h3>NuEdit Analysis Engine</h3>
+            <p>Python 기반 AI 알고리즘을 통해 암 환자 데이터 내 노화 가속 유전자를 정밀 식별합니다.</p>
+        </div>
+        <div class="roadmap-card">
+            <span class="step">Phase 02</span>
+            <h3>NuEdit Precision Scissor</h3>
+            <p>분석 엔진이 찾은 타겟을 부작용 없이 편집하는 독자적인 CRISPR 기술을 확보합니다.</p>
+        </div>
+        <div class="roadmap-card">
+            <span class="step">Phase 03</span>
+            <h3>Solution Licensing</h3>
+            <p>전 세계 제약사에 암 치료 최적화 데이터를 판매하고 기술을 이전하여 사업을 확장합니다.</p>
+        </div>
     </div>
 
-    <a href="about2.html" class="btn">TP53 분석 엔진 가동 (Step 0) →</a>
+    <footer>
+        <p>&copy; 2026 NuEdit Inc. | 파이썬 분석 기반 초정밀 유전자 편집 솔루션</p>
+    </footer>
 
-    <div class="footer">
-        &copy; 2026 NUEDIT TECH. ALL RIGHTS RESERVED.
-    </div>
 </body>
 </html>
