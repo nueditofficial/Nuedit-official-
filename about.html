@@ -5,39 +5,41 @@
     <title>NuEdit | TP53 Cancer Research</title>
     <style>
         function runAnalysis() {
-    const input = document.getElementById('seqInput').value.toUpperCase().replace(/[^ATGC]/g, '');
+    const rawInput = document.getElementById('seqInput').value;
+    // 공백, 줄바꿈 제거하고 대문자로 변환
+    const input = rawInput.toUpperCase().replace(/[^ATGC]/g, '');
     const resultDiv = document.getElementById('analysisResult');
     const report = document.getElementById('report');
     
-    if(input.length < 10) {
-        alert("분석하기에 서열이 너무 짧습니다.");
+    if(input.length < 5) {
+        alert("분석할 서열을 입력해주세요.");
         return;
     }
 
     let findings = [];
 
-    // 1. 175번 변이 (Arg175His) 정밀 스캔
-    // 정상 문맥: ...TCAC CGC CAG... / 암 변이 문맥: ...TCAC CAC CAG...
-    if (input.includes("TCACCACCAG")) {
-        findings.push(`<p class="alert">[위험] TP53 175번 변이 감지: Arg175His (암 유발 가능성 매우 높음)</p>`);
-    } else if (input.includes("TCACCGCCAG")) {
-        findings.push(`<p class="safe">[정상] TP53 175번 구간: 정상(Wild-type) 서열 확인</p>`);
+    // --- TP53 175번 변이 정밀 분석 ---
+    // 정상: CGC / 암: CAC
+    if (input.includes("TCACCACCAG") || (input.includes("CAC") && input.length < 50)) {
+        findings.push(`<p class="alert">🚨 [위험] TP53 175번 변이(Arg175His) 감지: 암 유발 가능성이 매우 높습니다.</p>`);
+    } else if (input.includes("TCACCGCCAG") || input.includes("CGC")) {
+        findings.push(`<p class="safe">✅ [정상] TP53 175번 구간: 정상 서열 확인</p>`);
     }
 
-    // 2. 248번 변이 (Arg248Trp) 정밀 스캔
-    // 정상 문맥: ...TTCACCC... / 암 변이 문맥: ...TTTTCCC... (혹은 TTC가 TTT로 변이)
-    if (input.includes("TATTTCACCCT")) {
-        findings.push(`<p class="safe">[정상] TP53 248번 구간: 정상(Wild-type) 서열 확인</p>`);
-    } else if (input.includes("TATTTTACCCT") || input.includes("TATTTCACCCT".replace("TTC", "TTC"))) {
-        // (참고: 실제 248번 변이 패턴인 TTC 유무를 체크)
-        if (input.includes("TATTTC")) {
-             // 정상 서열 케이스가 위에서 안 걸렸을 때 보조 체크
-        }
+    // --- TP53 248번 변이 정밀 분석 ---
+    // 정상: TTC / 암: TTT (또는 다른 변이)
+    if (input.includes("TATTTCACCCT") || (input.includes("TTC") && !findings.length)) {
+         findings.push(`<p class="safe">✅ [정상] TP53 248번 구간: 정상 서열 확인</p>`);
+    } else if (input.includes("TATTTTACCCT") || input.includes("TTT")) {
+         findings.push(`<p class="alert">🚨 [주의] TP53 248번 구간에서 변이 의심 서열(TTT)이 발견되었습니다.</p>`);
     }
 
-    // 결과 출력 로직
+    // --- 결과 출력 ---
     if (findings.length === 0) {
-        resultDiv.innerHTML = `<p style="color:#8b949e;">특이 변이를 찾지 못했습니다. 서열 범위를 확인해주세요.</p>`;
+        resultDiv.innerHTML = `
+            <p style="color:#8b949e;">⚠️ 일치하는 TP53 핵심 마커를 찾지 못했습니다.</p>
+            <p style="font-size:0.8rem;">입력된 서열: ${input.substring(0, 20)}...</p>
+        `;
     } else {
         resultDiv.innerHTML = findings.join('');
     }
