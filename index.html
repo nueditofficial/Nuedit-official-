@@ -3,62 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NuEdit | Precision Gene Editing</title>
+    <title>NuEdit | Nu Code, New Life</title>
     <style>
-        /* 다크 모드 기반의 하이테크 디자인 */
-        body { 
-            background-color: #05080f; 
-            color: #ffffff; 
-            font-family: 'Inter', -apple-system, sans-serif; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            text-align: center;
-        }
+        body { background-color: #0a0e17; color: #ffffff; font-family: sans-serif; text-align: center; padding: 80px 20px; margin: 0; }
+        .logo { width: 180px; margin-bottom: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(0, 242, 255, 0.1); }
         
-        .logo-container { margin-bottom: 30px; }
-        .logo { width: 120px; border-radius: 20%; border: 2px solid #00f2ff; padding: 10px; box-shadow: 0 0 20px rgba(0, 242, 255, 0.2); }
+        /* 기존 소개 멘트 강조 */
+        h1 { color: #00f2ff; font-size: 3rem; letter-spacing: -1px; margin-bottom: 10px; font-weight: 800; }
+        .vision { color: #aeb9cc; font-size: 1.2rem; margin-bottom: 30px; font-weight: 300; }
         
-        h1 { font-size: 3rem; font-weight: 800; letter-spacing: -2px; margin: 0; background: linear-gradient(to right, #00f2ff, #ffffff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        p { color: #8b949e; font-size: 1.1rem; margin-top: 10px; max-width: 500px; }
+        .badge-container { margin-bottom: 40px; }
+        .badge { display: inline-block; padding: 6px 18px; border: 1px solid #00f2ff; border-radius: 20px; color: #00f2ff; font-size: 0.85rem; margin: 5px; background: rgba(0, 242, 255, 0.05); }
         
-        .nav-buttons { margin-top: 40px; display: flex; gap: 15px; }
-        
-        /* 메인 버튼 스타일 (about2.html로 연결) */
-        .btn-primary { 
+        /* 분석 엔진 연결 버튼 */
+        .btn { 
+            display: inline-block; 
+            margin-top: 20px; 
             text-decoration: none; 
+            color: #0a0e17; 
             background: #00f2ff; 
-            color: #05080f; 
-            padding: 15px 35px; 
+            padding: 16px 40px; 
             border-radius: 8px; 
             font-weight: bold; 
             transition: 0.3s; 
             box-shadow: 0 4px 15px rgba(0, 242, 255, 0.3);
         }
-        .btn-primary:hover { background: #ffffff; transform: translateY(-3px); }
+        .btn:hover { background: #ffffff; transform: translateY(-2px); }
         
-        .footer { position: absolute; bottom: 30px; font-size: 0.8rem; color: #30363d; letter-spacing: 1px; }
+        .footer { margin-top: 120px; font-size: 0.8rem; color: #475569; letter-spacing: 1px; }
     </style>
 </head>
 <body>
-
-    <div class="logo-container">
-        <img src="logo.png" alt="NuEdit" class="logo" onerror="this.style.display='none'">
-    </div>
-
+    <img src="logo.png" alt="NuEdit Logo" class="logo" onerror="this.style.display='none'">
+    
     <h1>Nu Code, New Life.</h1>
-    <p>암 정복을 향한 데이터 기반 유전자 편집 플랫폼.<br>우리는 가장 치명적인 변이, TP53을 먼저 추적합니다.</p>
-
-    <div class="nav-buttons">
-        <a href="about2.html" class="btn-primary">TP53 분석 엔진 가동 →</a>
+    <p class="vision">암과 노화를 정복하는 정밀 유전자 편집 플랫폼</p>
+    
+    <div class="badge-container">
+        <span class="badge">Python Driven</span>
+        <span class="badge">CRISPR Tech</span>
+        <span class="badge">Longevity Science</span>
     </div>
+
+    <a href="about2.html" class="btn">TP53 분석 엔진 가동 (Step 0) →</a>
 
     <div class="footer">
-        &copy; 2026 NUEDIT BIOTECH. DATABASE: NCBI / CRISPR-CAS9 READY.
+        &copy; 2026 NUEDIT TECH. ALL RIGHTS RESERVED.
     </div>
-
 </body>
 </html>
