@@ -89,29 +89,30 @@
             card.innerHTML = logs.join('') + `<p class="info-text">총 분석 염기 수: ${input.length} bp</p>`;
             display.style.display = 'block';
         }
-    </script>
-</body>
-</html>
-function startSimulation() {
+        <script>
+function startAnalysis() {
     const input = document.getElementById('dnaInput').value.toUpperCase().replace(/[^ATGC]/g, '');
     
     if(input.length < 10) {
-        alert("분석할 서열이 부족합니다.");
+        alert("분석할 서열이 부족합니다. (최소 10자)");
         return;
     }
 
-    // 새 창의 크기와 설정
-    const width = 1000;
-    const height = 700;
+    // 팝업창 설정
+    const width = 1100;
+    const height = 750;
     const left = (window.screen.width / 2) - (width / 2);
     const top = (window.screen.height / 2) - (height / 2);
 
-    // 새 창 열기 (심층 시뮬레이션 창)
-    const simWindow = window.open('', 'NuEditSimulation', `width=${width},height=${height},left=${left},top=${top}`);
-    
-    // 새 창에 보낼 데이터 (localStorage 이용)
+    // 데이터 전달 및 새 창 열기
     localStorage.setItem('targetDNA', input);
+    const simWindow = window.open('sim.html', 'NuEditSimulation', `width=${width},height=${height},left=${left},top=${top},resizable=yes`);
     
-    // 시뮬레이션 파일(sim.html)로 이동
-    simWindow.location.href = 'sim.html';
+    if (!simWindow) {
+        alert("팝업 차단을 해제해주세요.");
+    }
 }
+</script>
+
+    </script>
+</body>
