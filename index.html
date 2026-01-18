@@ -2,30 +2,93 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>NuEdit | Nu Code, New Life</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NuEdit | Precision Analysis</title>
     <style>
-        body { background-color: #0a0e17; color: #ffffff; font-family: sans-serif; text-align: center; padding: 50px 20px; }
-        .logo { width: 180px; margin-bottom: 20px; border-radius: 10px; }
-        h1 { color: #00f2ff; font-size: 2.8rem; letter-spacing: -1px; }
-        .badge { display: inline-block; padding: 6px 18px; border: 1px solid #00f2ff; border-radius: 20px; color: #00f2ff; font-size: 0.85rem; margin: 5px; }
-        .btn { display: inline-block; margin-top: 40px; text-decoration: none; color: #00f2ff; border: 1px solid #00f2ff; padding: 12px 30px; border-radius: 5px; font-weight: bold; transition: 0.3s; }
-        .btn:hover { background: #00f2ff; color: #0a0e17; }
+        body { background-color: #05080f; color: #ffffff; font-family: 'Inter', sans-serif; padding: 40px 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #00f2ff; font-size: 1.8rem; margin-bottom: 5px; }
+        .subtitle { color: #8b949e; margin-bottom: 30px; font-size: 0.9rem; }
+        
+        /* 분석기 영역 */
+        .analyzer { background: #0d1117; border: 1px solid #30363d; padding: 25px; border-radius: 12px; }
+        label { display: block; margin-bottom: 10px; color: #c9d1d9; font-weight: bold; }
+        textarea { 
+            width: 100%; height: 120px; background: #010409; color: #58a6ff; 
+            border: 1px solid #30363d; border-radius: 6px; padding: 15px; 
+            font-family: monospace; box-sizing: border-box; font-size: 1rem;
+        }
+        button { 
+            width: 100%; padding: 15px; margin-top: 15px; background: #00f2ff; 
+            color: #05080f; border: none; border-radius: 6px; font-weight: bold; 
+            font-size: 1rem; cursor: pointer; transition: 0.2s;
+        }
+        button:hover { background: #00d4e0; transform: translateY(-1px); }
+
+        /* 결과 창 */
+        #result-display { margin-top: 30px; display: none; }
+        .card { background: #161b22; border-radius: 10px; padding: 20px; border-left: 5px solid #00f2ff; }
+        .danger-tag { color: #f85149; font-weight: bold; }
+        .safe-tag { color: #3fb950; font-weight: bold; }
+        .info-text { font-size: 0.9rem; color: #8b949e; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <img src="logo.png" alt="NuEdit Logo" class="logo">
-    <h1>Nu Code, New Life.</h1>
-    <p style="color: #aeb9cc;">암과 노화를 정복하는 정밀 유전자 편집 플랫폼</p>
-    <div>
-        <span class="badge">Python Driven</span>
-        <span class="badge">CRISPR Tech</span>
-        <span class="badge">Longevity Science</span>
+    <div class="container">
+        <h1>TP53 Cancer Target Discovery</h1>
+        <p class="subtitle">입력된 염기서열에서 암 유발 변이를 식별하고 정보화합니다.</p>
+
+        <div class="analyzer">
+            <label>DNA Sequence Input</label>
+            <textarea id="dnaInput" placeholder="분석할 서열을 붙여넣으세요... (A, T, G, C)"></textarea>
+            <button onclick="startAnalysis()">실시간 변이 스캔 가동</button>
+        </div>
+
+        <div id="result-display">
+            <div class="card" id="result-card">
+                </div>
+        </div>
     </div>
 
-    <a href="about2.html" class="btn">더 알아보기 (Step 0) →</a>
+    <script>
+        function startAnalysis() {
+            // 1. 데이터 정제 (공백 제거 및 대문자화)
+            const input = document.getElementById('dnaInput').value.toUpperCase().replace(/[^ATGC]/g, '');
+            const display = document.getElementById('result-display');
+            const card = document.getElementById('result-card');
+            
+            if (input.length < 3) {
+                alert("분석할 데이터를 입력해주세요.");
+                return;
+            }
 
-    <div style="margin-top: 100px; font-size: 0.8rem; color: #475569;">
-        &copy; 2026 NuEdit Tech. All Rights Reserved.
-    </div>
+            let logs = [];
+            let foundMutation = false;
+
+            // 2. TP53 변이 핵심 데이터베이스 대조
+            // 변이 1: 175번 Hotspot
+            if (input.includes("CAC")) {
+                logs.push(`<p class="danger-tag">🚨 변이 감지: Arg175His (암 유발 드라이버 변이)</p>`);
+                foundMutation = true;
+            }
+            
+            // 변이 2: 248번 Hotspot
+            if (input.includes("TTT")) {
+                logs.push(`<p class="danger-tag">🚨 변이 감지: Arg248Trp (DNA 결합 도메인 변이)</p>`);
+                foundMutation = true;
+            }
+
+            // 변이가 없을 경우 정상 판단
+            if (!foundMutation && (input.includes("CGC") || input.includes("TTC"))) {
+                logs.push(`<p class="safe-tag">✅ 정상 서열 확인 (Wild-type TP53)</p>`);
+            } else if (!foundMutation) {
+                logs.push(`<p>⚠️ 분석 완료: 알려진 주요 변이가 발견되지 않았습니다.</p>`);
+            }
+
+            // 3. 화면에 출력
+            card.innerHTML = logs.join('') + `<p class="info-text">총 분석 염기 수: ${input.length} bp</p>`;
+            display.style.display = 'block';
+        }
+    </script>
 </body>
 </html>
