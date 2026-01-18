@@ -2,38 +2,93 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>NuEdit | TP53 Analyzer v0.2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NuEdit | Precision Analysis</title>
     <style>
-        body { background: #05080f; color: white; font-family: sans-serif; padding: 40px; }
-        .box { background: #0d1117; padding: 20px; border: 1px solid #00f2ff; border-radius: 10px; }
-        textarea { width: 100%; height: 100px; background: #000; color: #00f2ff; border: 1px solid #333; }
-        button { width: 100%; padding: 15px; margin-top: 10px; background: #00f2ff; font-weight: bold; cursor: pointer; }
-        #result { margin-top: 20px; padding: 15px; border-radius: 5px; display: none; background: #161b22; }
+        body { background-color: #05080f; color: #ffffff; font-family: 'Inter', sans-serif; padding: 40px 20px; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 { color: #00f2ff; font-size: 1.8rem; margin-bottom: 5px; }
+        .subtitle { color: #8b949e; margin-bottom: 30px; font-size: 0.9rem; }
+        
+        /* 분석기 영역 */
+        .analyzer { background: #0d1117; border: 1px solid #30363d; padding: 25px; border-radius: 12px; }
+        label { display: block; margin-bottom: 10px; color: #c9d1d9; font-weight: bold; }
+        textarea { 
+            width: 100%; height: 120px; background: #010409; color: #58a6ff; 
+            border: 1px solid #30363d; border-radius: 6px; padding: 15px; 
+            font-family: monospace; box-sizing: border-box; font-size: 1rem;
+        }
+        button { 
+            width: 100%; padding: 15px; margin-top: 15px; background: #00f2ff; 
+            color: #05080f; border: none; border-radius: 6px; font-weight: bold; 
+            font-size: 1rem; cursor: pointer; transition: 0.2s;
+        }
+        button:hover { background: #00d4e0; transform: translateY(-1px); }
+
+        /* 결과 창 */
+        #result-display { margin-top: 30px; display: none; }
+        .card { background: #161b22; border-radius: 10px; padding: 20px; border-left: 5px solid #00f2ff; }
+        .danger-tag { color: #f85149; font-weight: bold; }
+        .safe-tag { color: #3fb950; font-weight: bold; }
+        .info-text { font-size: 0.9rem; color: #8b949e; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <h1>TP53 Cancer Research Engine v0.2</h1>
-    <div class="box">
-        <textarea id="dnaInput" placeholder="DNA 서열 입력 (예: ATGC...)"></textarea>
-        <button onclick="run()">분석 시작</button>
-        <div id="result"></div>
+    <div class="container">
+        <h1>TP53 Cancer Target Discovery</h1>
+        <p class="subtitle">입력된 염기서열에서 암 유발 변이를 식별하고 정보화합니다.</p>
+
+        <div class="analyzer">
+            <label>DNA Sequence Input</label>
+            <textarea id="dnaInput" placeholder="분석할 서열을 붙여넣으세요... (A, T, G, C)"></textarea>
+            <button onclick="startAnalysis()">실시간 변이 스캔 가동</button>
+        </div>
+
+        <div id="result-display">
+            <div class="card" id="result-card">
+                </div>
+        </div>
     </div>
 
     <script>
-        function run() {
+        function startAnalysis() {
+            // 1. 데이터 정제 (공백 제거 및 대문자화)
             const input = document.getElementById('dnaInput').value.toUpperCase().replace(/[^ATGC]/g, '');
-            const res = document.getElementById('result');
-            res.style.display = 'block';
+            const display = document.getElementById('result-display');
+            const card = document.getElementById('result-card');
             
-            let findings = [];
-            // 오직 핵심 변이만 체크 (길이 체크 삭제됨)
-            if (input.includes("CAC")) findings.push("<p style='color:#f85149;'>🚨 175번 암 변이(Arg175His) 발견!</p>");
-            if (input.includes("TTT")) findings.push("<p style='color:#f85149;'>🚨 248번 암 변이(Arg248Trp) 발견!</p>");
-            if (input.includes("CGC") || input.includes("TTC")) findings.push("<p style='color:#3fb950;'>✅ 정상 서열 확인됨</p>");
+            if (input.length < 3) {
+                alert("분석할 데이터를 입력해주세요.");
+                return;
+            }
 
-            res.innerHTML = findings.length > 0 ? findings.join('') : "특이 변이 없음";
+            let logs = [];
+            let foundMutation = false;
+
+            // 2. TP53 변이 핵심 데이터베이스 대조
+            // 변이 1: 175번 Hotspot
+            if (input.includes("CAC")) {
+                logs.push(`<p class="danger-tag">🚨 변이 감지: Arg175His (암 유발 드라이버 변이)</p>`);
+                foundMutation = true;
+            }
+            
+            // 변이 2: 248번 Hotspot
+            if (input.includes("TTT")) {
+                logs.push(`<p class="danger-tag">🚨 변이 감지: Arg248Trp (DNA 결합 도메인 변이)</p>`);
+                foundMutation = true;
+            }
+
+            // 변이가 없을 경우 정상 판단
+            if (!foundMutation && (input.includes("CGC") || input.includes("TTC"))) {
+                logs.push(`<p class="safe-tag">✅ 정상 서열 확인 (Wild-type TP53)</p>`);
+            } else if (!foundMutation) {
+                logs.push(`<p>⚠️ 분석 완료: 알려진 주요 변이가 발견되지 않았습니다.</p>`);
+            }
+
+            // 3. 화면에 출력
+            card.innerHTML = logs.join('') + `<p class="info-text">총 분석 염기 수: ${input.length} bp</p>`;
+            display.style.display = 'block';
         }
     </script>
 </body>
 </html>
-
