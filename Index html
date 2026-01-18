@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>NuEdit.bio</title>
+    <style>
+        body { background-color: #0a0e17; color: #ffffff; font-family: sans-serif; text-align: center; padding: 50px; }
+        .logo { width: 180px; margin-bottom: 20px; }
+        h1 { color: #00f2ff; }
+        section { max-width: 600px; margin: 40px auto; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; text-align: left; }
+    </style>
+</head>
+<body>
+    <img src="logo.png" alt="NuEdit Logo" class="logo">
+    <h1>NuEdit.bio</h1>
+    <section>
+        <h4>0단계: 기초 다지기</h4>
+        <p>
+            우리는 생명공학의 기본 단위(Nucleotide)부터 다시 설계하는 혁신을 꿈꿉니다.<br><br>
+            현재 NuEdit은 거창한 홍보보다 탄탄한 기초를 쌓는 데 집중하고 있습니다. 
+            Python 데이터 분석을 공부하며 연구를 준비 중입니다.
+        </p>
+    </section>
+    <div style="margin-top:50px; font-size:0.8rem; color:#666;">
+        © 2026 NuEdit Tech. All Rights Reserved.<br>
+        Contact: nueditofficial@gmail.com
+    </div>
+</body>
+</html>
+
