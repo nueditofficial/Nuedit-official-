@@ -92,3 +92,26 @@
     </script>
 </body>
 </html>
+function startSimulation() {
+    const input = document.getElementById('dnaInput').value.toUpperCase().replace(/[^ATGC]/g, '');
+    
+    if(input.length < 10) {
+        alert("분석할 서열이 부족합니다.");
+        return;
+    }
+
+    // 새 창의 크기와 설정
+    const width = 1000;
+    const height = 700;
+    const left = (window.screen.width / 2) - (width / 2);
+    const top = (window.screen.height / 2) - (height / 2);
+
+    // 새 창 열기 (심층 시뮬레이션 창)
+    const simWindow = window.open('', 'NuEditSimulation', `width=${width},height=${height},left=${left},top=${top}`);
+    
+    // 새 창에 보낼 데이터 (localStorage 이용)
+    localStorage.setItem('targetDNA', input);
+    
+    // 시뮬레이션 파일(sim.html)로 이동
+    simWindow.location.href = 'sim.html';
+}
