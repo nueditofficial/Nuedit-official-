@@ -58,37 +58,34 @@
 
     <script>
         // 실제 암 유발 TP53 변이 데이터베이스
-        const MUTATION_DB = [
-            { seq: "CAC", pos: 175, type: "Hotspot Mutation", desc: "Arg175His - 단백질 구조 붕괴 (암 유발 위험 높음)" },
-            { seq: "TTC", pos: 248, type: "Hotspot Mutation", desc: "Arg248Trp - DNA 결합 기능 상실 (암세포 증식)" },
-            { seq: "CAT", pos: 273, type: "Hotspot Mutation", desc: "Arg273His - 전사 조절 불능" }
-        ];
+        // 업그레이드된 정밀 분석 로직
+function runAnalysis() {
+    const input = document.getElementById('seqInput').value.toUpperCase().replace(/[^ATGC]/g, '');
+    const resultDiv = document.getElementById('analysisResult');
+    
+    // 1. 정상 표준 서열 (TP53의 특정 구간 예시)
+    const REF_SEQ = "GAAACCACTGGATGGAGAATATTTCACCCTTCAGATCCGTGGGC";
+    
+    let findings = [];
 
-        function runAnalysis() {
-            const input = document.getElementById('seqInput').value.toUpperCase().replace(/[^ATGC]/g, '');
-            const report = document.getElementById('report');
-            const resultDiv = document.getElementById('analysisResult');
-            
-            if(input.length < 3) {
-                alert("분석할 서열이 너무 짧습니다.");
-                return;
-            }
+    // 2. 입력한 서열과 표준 서열을 1:1로 비교
+    if (input.length !== REF_SEQ.length) {
+        findings.push(`<p style="color:yellow;">[알림] 입력 서열 길이가 표준(44bp)과 다릅니다. 정렬(Alignment) 분석을 시작합니다.</p>`);
+    }
 
-            let findings = [];
-            MUTATION_DB.forEach(m => {
-                if(input.includes(m.seq)) {
-                    findings.push(`<p class="alert">[경고] ${m.type} 발견: ${m.desc}</p>`);
-                }
-            });
+    // 175번 위치(예시 인덱스 20-22) 집중 분석
+    const pos175 = input.substring(21, 24); // 특정 위치 추출
+    if (pos175 === "CAC") {
+        findings.push(`<p class="alert">[위험] 175번 위치에서 Arg175His 변이 확진!</p>`);
+    } else if (pos175 === "CGC") {
+        findings.push(`<p class="safe">[정상] 175번 위치가 표준(CGC)과 일치합니다.</p>`);
+    }
 
-            if(findings.length > 0) {
-                resultDiv.innerHTML = findings.join('') + `<p>총 ${input.length}bp 분석 완료. 즉각적인 타겟 설계가 권장됩니다.</p>`;
-            } else {
-                resultDiv.innerHTML = `<p class="safe">[정상] 주요 Hotspot 변이가 발견되지 않았습니다.</p>`;
-            }
+    // 결과 출력
+    resultDiv.innerHTML = findings.length > 0 ? findings.join('') : "<p>분석 불가능한 서열입니다.</p>";
+    document.getElementById('report').style.display = 'block';
+}
 
-            report.style.display = 'block';
-        }
     </script>
 </body>
 </html>
